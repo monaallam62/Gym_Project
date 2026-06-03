@@ -6,6 +6,7 @@ namespace Gym_Project.Contexts
 {
     public class GymDbContext:DbContext
     {
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=.\SQL2026;Database=GymDb;Trusted_Connection=True;trustServerCertificate=True"); 
@@ -16,5 +17,6 @@ namespace Gym_Project.Contexts
         }
 
         public DbSet<Plan> plans { get; set; }
+        
     }
 }
