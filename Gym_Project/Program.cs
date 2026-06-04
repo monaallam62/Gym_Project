@@ -1,3 +1,8 @@
+using Gym_Project.Contexts;
+using GymManagement.DAL.Repositories.Classes;
+using GymManagement.DAL.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 namespace Gym_Project
 {
     public class Program
@@ -8,6 +13,16 @@ namespace Gym_Project
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Register Dependency Injection Container
+            //<العقد اللي بين الواجهة وبين الريبو ,immplementation>
+            builder.Services.AddScoped<IPlanRepository,PlanRepository>();
+            //EFcore create objects from DbContext Automatically when we Request  it from the container(Dependency Injection) and dispose of it after the request is done 
+
+            builder.Services.AddDbContext<GymDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
 
             var app = builder.Build();
 
