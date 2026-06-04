@@ -14,9 +14,9 @@ namespace GymManagement.DAL.Repositories.Classes
     {
         //[1]DATABASE CONNECTION
         private readonly GymDbContext dbcontext;
-        public PlanRepository()
+        public PlanRepository(GymDbContext dbContext)
         {
-            dbcontext = new GymDbContext();
+            this.dbcontext = dbContext;
         }
         public async Task<int> AddAsync(Plan plan, CancellationToken ct = default)
         {
