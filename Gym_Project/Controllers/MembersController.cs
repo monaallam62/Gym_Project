@@ -42,7 +42,11 @@ namespace Gym_Project.PL.Controllers
             if (!ModelState.IsValid) return View(nameof(Create), model);
 
             var result = await _memService.CreateMemberAsync(model, ct);
-            return RedirectToAction(nameof(Index), result);
+            if (result)
+                TempData["SuccessMessage"] = "Member Created Successfully";
+            else
+                TempData["ErrorMessage"] = "Failed To Create Member!";
+                return RedirectToAction(nameof(Index), result);
         }
         
         #endregion
