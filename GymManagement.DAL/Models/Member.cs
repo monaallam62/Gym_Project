@@ -9,6 +9,9 @@ namespace GymManagement.DAL.Models
     public class Member:GymUser
     {
         public string? Photo { get; set; }
+        #region RelationShips
+        public HealthRecord HealthRecord { get; set; } = default!; //Navigation Prop
+        #endregion
         //JoinDate ==createedAt of BaseEntity
     }
 }

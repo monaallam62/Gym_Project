@@ -12,5 +12,12 @@ namespace GymManagement.DAL.Models
         public int Capacity { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+
+        #region Relationships
+        public Trainer Trainer { get; set; } //NAV PROP
+        public int TrainerId { get; set; } //FK
+
+        #endregion
+
     }
 }
