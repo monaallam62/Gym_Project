@@ -35,20 +35,22 @@ namespace GymManagement.DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Photo = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     Address_BuildingNumber = table.Column<int>(type: "int", nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Address_Street = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false),
+                    Address_City = table.Column<string>(type: "varchar(30)", maxLength: 30, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Members", x => x.Id);
+                    table.CheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'");
+                    table.CheckConstraint("PhoneCheck", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'");
                 });
 
             migrationBuilder.CreateTable(
@@ -92,8 +94,8 @@ namespace GymManagement.DAL.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Trainers", x => x.Id);
-                    table.CheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'");
-                    table.CheckConstraint("PhoneCheck", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'");
+                    table.CheckConstraint("EmailCheck1", "Email LIKE '_%@_%._%'");
+                    table.CheckConstraint("PhoneCheck1", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'");
                 });
 
             migrationBuilder.CreateTable(
@@ -232,6 +234,18 @@ namespace GymManagement.DAL.Migrations
                 name: "IX_HealthRecords_MemberId",
                 table: "HealthRecords",
                 column: "MemberId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Members_Email",
+                table: "Members",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Members_Phone",
+                table: "Members",
+                column: "Phone",
                 unique: true);
 
             migrationBuilder.CreateIndex(

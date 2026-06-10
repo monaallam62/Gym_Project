@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagement.DAL.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20260610133120_IntialCreate")]
+    [Migration("20260610174301_IntialCreate")]
     partial class IntialCreate
     {
         /// <inheritdoc />
@@ -162,25 +162,30 @@ namespace GymManagement.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasColumnName("JoinDate")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateOnly>("DateOfBirth")
                         .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Photo")
                         .HasColumnType("nvarchar(max)");
@@ -190,7 +195,18 @@ namespace GymManagement.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Members");
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("Phone")
+                        .IsUnique();
+
+                    b.ToTable("Members", t =>
+                        {
+                            t.HasCheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'");
+
+                            t.HasCheckConstraint("PhoneCheck", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'");
+                        });
                 });
 
             modelBuilder.Entity("GymManagement.DAL.Models.Membership", b =>
@@ -325,9 +341,11 @@ namespace GymManagement.DAL.Migrations
 
                     b.ToTable("Trainers", t =>
                         {
-                            t.HasCheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'");
+                            t.HasCheckConstraint("EmailCheck", "Email LIKE '_%@_%._%'")
+                                .HasName("EmailCheck1");
 
-                            t.HasCheckConstraint("PhoneCheck", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'");
+                            t.HasCheckConstraint("PhoneCheck", "Phone LIKE '010%' or  Phone LIKE '011%' or  Phone LIKE '012%' or Phone LIKE '015%'")
+                                .HasName("PhoneCheck1");
                         });
                 });
 
@@ -416,11 +434,13 @@ namespace GymManagement.DAL.Migrations
 
                             b1.Property<string>("City")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(30)
+                                .HasColumnType("varchar");
 
                             b1.Property<string>("Street")
                                 .IsRequired()
-                                .HasColumnType("nvarchar(max)");
+                                .HasMaxLength(30)
+                                .HasColumnType("varchar");
 
                             b1.HasKey("MemberId");
 
