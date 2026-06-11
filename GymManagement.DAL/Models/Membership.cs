@@ -12,9 +12,9 @@ namespace GymManagement.DAL.Models
     {
         #region Relationships
         public Member Member { get; set; }
-        public int MemberId { get; set; } //-----------int
+        public int MemberId { get; set; } 
         public Plan Plan { get; set; }
-        public int PlanId { get; set; }     //-----------int
+        public int PlanId { get; set; }    
 
         //StartDate==CreateAt=BaseEntity
         public DateTime EndDate { get; set; }
