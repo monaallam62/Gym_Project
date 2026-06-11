@@ -25,7 +25,26 @@ namespace Gym_Project.PL.Controllers
         }
 
         //Get :: BaseUrl/Members/Details/{id} => Get Specific Member
+        public async Task<IActionResult> MemberDetails(int id, CancellationToken ct)
+        {
+            var member =await _memService.GetMemberDetailsByIdAsync(id, ct);
+            if (member is null)
+            {
+                TempData["ErrorMessage"] = "Member Not Found!";
+            }
+            return View(member);
+        }
         //Get :: BaseUrl/Members/HealthRecordDetails/{id} => Get Data of Specific Member With HealthRecord
+        public async Task<IActionResult> HealthRecordDetails(int id, CancellationToken ct)
+        {
+            var record = await _memService.GetMemberHealthRecord(id, ct);
+            if (record is null)
+            {
+                TempData["ErrorMessage"] = "Health Record Not Found!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(record);
+        }
 
         #endregion
         #region Create
@@ -45,7 +64,7 @@ namespace Gym_Project.PL.Controllers
             if (result)
                 TempData["SuccessMessage"] = "Member Created Successfully";
             else
-                TempData["ErrorMessage"] = "Failed To Create Member!";
+                TempData["ErrorMessage"] = "Member is Already Exist or Failed TO Create!";
                 return RedirectToAction(nameof(Index), result);
         }
         
