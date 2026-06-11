@@ -22,9 +22,10 @@ namespace GymManagement.DAL.FluentConfiguration
             //Seeding =>>> HasData =>Must send ID ,Disable Identity ID
             builder.HasData(
                 new Category { Id = 1, CategoryName = "Cardio" },
-                new Category { Id = 2, CategoryName = "Strength Training" },
-                new Category { Id = 3, CategoryName = "Flexibility" },
-                new Category { Id = 4, CategoryName = "Balance" }
+                new Category { Id = 2, CategoryName = "Strength" },
+                new Category { Id = 3, CategoryName = "Yoga" },
+                new Category { Id = 4, CategoryName = "Boxing" },
+                new Category { Id = 5, CategoryName = "CrossFit" }
             );
         }
     }

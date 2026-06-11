@@ -13,6 +13,12 @@ namespace GymManagement.DAL.Models
         public string BloodType { get; set; } 
         public string? Note  { get; set; }
 
+        #region Realationships 1-1(TT)
+        public Member Member { get; set; } = default!; //Navigation property
+        public int MemberId { get; set; } //FK name of prop+Id 
+
+        #endregion
+
         //UpdatedAt of BaseEntity => LastUpdated
     }
 }

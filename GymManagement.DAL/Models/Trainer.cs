@@ -11,5 +11,9 @@ namespace GymManagement.DAL.Models
     {
         //HireDate ==createdAt of BaseEntity
         public Specialty Specialty { get; set; }
+
+        #region Relationships
+        public ICollection<Session> Sessions { get; set; }
+        #endregion
     }
 }
