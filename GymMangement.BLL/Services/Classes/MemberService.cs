@@ -1,4 +1,5 @@
-﻿using GymManagement.DAL.Models;
+﻿using Gym_Project.Models;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL.Services.Interfaces;
 using GymMangement.BLL.ViewModels;
@@ -15,10 +16,16 @@ namespace GymMangement.BLL.Services.Classes
     {
         //Database Connection
         public readonly IGenericRepository<Member> _memberRepo;
+        private readonly IGenericRepository<Membership> _membershipRepo;
+        private readonly IGenericRepository<Plan> _planRepo;
+        private readonly IGenericRepository<HealthRecord> _healthRecordRepo;
 
-        public MemberService(IGenericRepository<Member> memberRepo)
+        public MemberService(IGenericRepository<Member> memberRepo , IGenericRepository<Membership> membershipRepo , IGenericRepository<Plan> planRepo , IGenericRepository<HealthRecord> HealthRecordRepo)
         {
             _memberRepo = memberRepo;
+            _membershipRepo = membershipRepo;
+            _planRepo = planRepo;
+            _healthRecordRepo = HealthRecordRepo;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -80,6 +87,52 @@ namespace GymMangement.BLL.Services.Classes
                 memberVM.Add(memberViewModel);
             }
             return memberVM;
+        }
+
+ 
+
+        public async Task<MemberViewModel> GetMemberDetailsByIdAsync(int memberId, CancellationToken ct = default)
+        {
+            //Get Mmeber By Id
+            var member = await _memberRepo.GetByIdAsync(memberId, ct);
+            if (member == null) return null;
+            //Table = Member
+            //Return =MemberViewModel
+            var model = new MemberViewModel()
+            {
+                Name = member.Name,
+                Email = member.Email,
+                Phone = member.Phone,
+                Photo = member.Photo,
+                Gender = member.Gender.ToString(),
+                DateOfBirth = member.DateOfBirth.ToShortDateString(),
+                Address = $"{member.Address.BuildingNumber} {member.Address.Street} {member.Address.City}",
+            };
+
+            //check if the member has a ActiveMembership or not
+            var ActiveMembership = await _membershipRepo.FirstOrDefaultAsync(X => X.MemberId == memberId && X.EndDate > DateTime.Now  );
+            if (ActiveMembership is not null)
+            {
+                var ActivePlan = await _planRepo.GetByIdAsync(ActiveMembership.PlanId, ct);
+                model.PlanName = ActivePlan.Name;
+                model.MembershipStartDate = ActiveMembership.CreatedAt.ToString();
+                model.MembershipEndDate = ActiveMembership.EndDate.ToString();
+            }
+            return model;
+        }
+        public async Task<HealthRecordViewModel> GetMemberHealthRecord(int memberId, CancellationToken ct)
+        {
+            var record = await _healthRecordRepo.FirstOrDefaultAsync(X => X.MemberId == memberId, ct: ct);
+
+            if (record is null) return null;
+            else
+                return new HealthRecordViewModel
+                {
+                    Weight = record.Weight,
+                    Height = record.Height,
+                    BloodType = record.BloodType,
+                    Note = record.Note
+                };
         }
     }
 }
