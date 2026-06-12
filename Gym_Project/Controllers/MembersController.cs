@@ -1,5 +1,6 @@
 ﻿using GymMangement.BLL.Services.Interfaces;
 using GymMangement.BLL.ViewModels;
+using GymMangement.BLL.ViewModels.MemberViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -67,14 +68,60 @@ namespace Gym_Project.PL.Controllers
                 TempData["ErrorMessage"] = "Member is Already Exist or Failed TO Create!";
                 return RedirectToAction(nameof(Index), result);
         }
-        
+
         #endregion
         #region Edit
         //Get :: BaseUrl/Members/Edit/{id} => Show Edit Form
+        [HttpGet]
+        public async Task<IActionResult> EditMember(int id, CancellationToken ct)
+        {
+            var member = await _memService.GetMemberToUpdateAsync(id, ct);
+            if (member == null)
+            {
+                TempData["ErrorMessage"] = "Member Not Found!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(member);
+        }
+
         //Post BaseUrl/Members/Edit/{member} => Submit Edit Form
+        [HttpPost]
+        public async Task<IActionResult> EditMember([FromRoute]int id, MemberToUpdateViewModel model, CancellationToken ct)
+        {
+            //Check Model State   
+            if (!ModelState.IsValid) return View(model);
+
+            var result = await _memService.UpdateMemberAsync(id, model, ct);
+            if (result)
+                TempData["SuccessMessage"] = "Member Updated Successfully";
+            else
+                TempData["ErrorMessage"] = "Failed to Update Member!";
+            return RedirectToAction(nameof(Index));
+        }
         #endregion
         #region Delete
         //Get :: BaseUrl/Member/Delete/{id} => Show Validation Padge
+        public async Task<IActionResult> Delete(int id, CancellationToken ct)
+        { 
+            var member = await _memService.GetMemberDetailsByIdAsync(id, ct);
+
+            if (member is null)
+            { 
+                TempData["ErrorMessage"] = "Member Not Found!";
+                return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteConfirmed([FromRoute]int id, CancellationToken ct)
+        {
+            var result = await _memService.DeleteMemberAsync(id, ct);
+            if (result)
+                TempData["SuccessMessage"] = "Member Deleted Successfully";
+            else
+                TempData["ErrorMessage"] = "Failed to Delete Member! Maybe Member has Active Booking";
+            return RedirectToAction(nameof(Index));
+        }
         #endregion
     }
 }
