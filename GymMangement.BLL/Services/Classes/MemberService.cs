@@ -4,6 +4,7 @@ using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL.Services.Interfaces;
 using GymMangement.BLL.ViewModels;
 using GymMangement.BLL.ViewModels.MemberViewModels;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,13 +20,15 @@ namespace GymMangement.BLL.Services.Classes
         private readonly IGenericRepository<Membership> _membershipRepo;
         private readonly IGenericRepository<Plan> _planRepo;
         private readonly IGenericRepository<HealthRecord> _healthRecordRepo;
+        private readonly IGenericRepository<Booking> _bookingRepo;
 
-        public MemberService(IGenericRepository<Member> memberRepo , IGenericRepository<Membership> membershipRepo , IGenericRepository<Plan> planRepo , IGenericRepository<HealthRecord> HealthRecordRepo)
+        public MemberService(IGenericRepository<Member> memberRepo , IGenericRepository<Membership> membershipRepo , IGenericRepository<Plan> planRepo , IGenericRepository<HealthRecord> healthRecordRepo , IGenericRepository<Booking> bookingRepo)
         {
             _memberRepo = memberRepo;
             _membershipRepo = membershipRepo;
             _planRepo = planRepo;
-            _healthRecordRepo = HealthRecordRepo;
+            _healthRecordRepo = healthRecordRepo;
+            _bookingRepo = bookingRepo;
         }
 
         public async Task<bool> CreateMemberAsync(CreateMemberViewModel model, CancellationToken ct = default)
@@ -60,6 +63,18 @@ namespace GymMangement.BLL.Services.Classes
             };
             var result = await _memberRepo.AddAsync(member);
             return result > 0;
+        }
+
+        public async Task<bool> DeleteMemberAsync(int memberId, CancellationToken ct = default)
+        {
+            var member = await _memberRepo.GetByIdAsync(memberId, ct);
+            if (member is null) return false;
+            //If Member has Active Booking Or Not
+            var HasActiveBooking = await _bookingRepo.AnyAsync(B => B.MemberId == memberId && B.Session.StartDate > DateTime.Now); //Exception
+            if(HasActiveBooking) return false;
+            var result = await _memberRepo.DeleteAsync(member);
+            return result > 0;
+            
         }
 
         public async Task<IEnumerable<MemberViewModel>> GetAllAsync(CancellationToken ct = default)
@@ -134,5 +149,44 @@ namespace GymMangement.BLL.Services.Classes
                     Note = record.Note
                 };
         }
+
+        public async Task<MemberToUpdateViewModel> GetMemberToUpdateAsync(int memberId, CancellationToken ct = default)
+        {
+            var member = await _memberRepo.GetByIdAsync(memberId, ct);
+            if (member is null) return null;
+            else
+                return new MemberToUpdateViewModel()
+                {
+                    Name = member.Name,
+                    Phone = member.Phone,
+                    Email = member.Email,                    
+                    BuildingNumber = member.Address.BuildingNumber,
+                    City = member.Address.City,
+                    Street = member.Address.Street,
+                    Photo = member.Photo
+                };
+        }
+
+        public async Task<bool> UpdateMemberAsync(int Id, MemberToUpdateViewModel model, CancellationToken ct = default)
+        { 
+            //Get Member
+            var member =await _memberRepo.GetByIdAsync(Id, ct);
+            //Check If Any Other User Has The Same Email Or Phone Or Not
+            var EmailExist = await _memberRepo.AnyAsync(M => M.Email == model.Email && M.Id != Id);
+            var PhoneExist = await _memberRepo.AnyAsync(M => M.Phone == model.Phone && M.Id != Id);
+
+            if(EmailExist || PhoneExist ) return false;
+            member.Phone = model.Phone;
+            member.Email = model.Email;
+            member.Address.City = model.City;
+            member.Address.Street = model.Street;
+            member.Address.BuildingNumber = model.BuildingNumber;
+            member.UpdatedAt = DateTime.Now;
+
+            var result = await _memberRepo.UpdateAsync(member);
+            return result > 0;
+
+        }
+        
     }
 }
