@@ -20,6 +20,7 @@ namespace Gym_Project
             //<العقد اللي بين الواجهة وبين الريبو ,immplementation>
             builder.Services.AddScoped<IMemberService,MemberService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             //EFcore create objects from DbContext Automatically when we Request  it from the container(Dependency Injection) and dispose of it after the request is done 
 
             builder.Services.AddDbContext<GymDbContext>(options =>
