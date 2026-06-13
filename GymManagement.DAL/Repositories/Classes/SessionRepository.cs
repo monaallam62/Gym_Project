@@ -18,16 +18,13 @@ namespace GymManagement.DAL.Repositories.Classes
         {
             _dbContext = dbContext;
         }
-        public async Task<IEnumerable<Session>> GetAllSessionsWithTrainerandCategory(CancellationToken ct = default)
+        public async Task<IEnumerable<Session>> GetAllSessionswithTrainerAndCategory(CancellationToken ct = default)
         {
             var query = _dbContext.Sessions.AsNoTracking().Include(S => S.Trainer).Include(S => S.Category);
             return await query.ToListAsync(ct);
         }
 
-        public Task<IEnumerable<Session>> GetAllSessionswithTrainerAndCategory(CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
+
 
         public async Task<int> GetCountOfBookedSlotAsync(int sessionId, CancellationToken ct = default)
         {
