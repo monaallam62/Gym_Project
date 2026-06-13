@@ -14,10 +14,14 @@ namespace GymManagement.DAL.Repositories.Classes
         //DB Connection 
         private readonly GymDbContext _dbContext;
         private readonly Dictionary<string, object> _repsitories = [];
-        public UnitOfWork(GymDbContext dbContext)
+        public UnitOfWork(GymDbContext dbContext , ISessionRepository sessionRepository)
         {
             _dbContext = dbContext;
+            SessionRepository =sessionRepository
         }
+
+        public ISessionRepository SessionRepository { get; }
+
         public IGenericRepository<TEntity> GetRepository<TEntity>() where TEntity : BaseEntity, new()
         {
             //Check if Repo Exist Or Not ?
