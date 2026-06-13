@@ -74,6 +74,10 @@ namespace GymMangement.BLL.Services.Classes
             if (plan is null) return false;
             if (plan.IsActive && await HasActiveMembershipsAsync(planId, ct))
                 return false;
+            plan.IsActive = !plan.IsActive;
+            plan.UpdatedAt = DateTime.Now;
+            var result = await _planRepository.UpdateAsync(plan, ct);
+            return result > 0;
         }
 
         public async Task<bool> UpdatePlanAsync(int id, UpdatePlanViewModel model, CancellationToken ct = default)
