@@ -52,7 +52,7 @@ namespace GymMangement.BLL.Services.Classes
                     Note =model.HealthRecordViewModel.Note
                 }
             };
-            _unitOfWork.GetRepository<Member>().AddAsync(member);
+            _unitOfWork.GetRepository<Member>().Add(member);
             var result = await _unitOfWork.SaveChangesAsync(ct);
             return result > 0;
         }
@@ -64,7 +64,7 @@ namespace GymMangement.BLL.Services.Classes
             //If Member has Active Booking Or Not
             var HasActiveBooking = await _unitOfWork.GetRepository<Booking>().AnyAsync(B => B.MemberId == memberId && B.Session.StartDate > DateTime.Now); //Exception
             if(HasActiveBooking) return false;
-            _unitOfWork.GetRepository<Member>().DeleteAsync(member);
+            _unitOfWork.GetRepository<Member>().Delete(member);
             var result = await _unitOfWork.SaveChangesAsync(ct);
             return result > 0;
             
@@ -176,7 +176,7 @@ namespace GymMangement.BLL.Services.Classes
             member.Address.BuildingNumber = model.BuildingNumber;
             member.UpdatedAt = DateTime.Now;
 
-            _unitOfWork.GetRepository<Member>().UpdateAsync(member);
+            _unitOfWork.GetRepository<Member>().Update(member);
             var result = await _unitOfWork.SaveChangesAsync();
             return result > 0;
 

@@ -31,8 +31,9 @@ namespace GymManagement.DAL.Repositories.Classes
             //Create Repo => Add It To Dictionary => Return New Repo
             else
             {
+                // IF Not -> Create -> Store -> Return 
                 var repo = new GenericRepository<TEntity>(_dbContext);
-                _repsitories[TypeName]=repo;
+                _repsitories[TypeName]=repo; //Store in Dictionary
                 return repo;
             }
 
