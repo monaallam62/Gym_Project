@@ -14,8 +14,6 @@ namespace GymMangement.BLL.Services.Classes
     public class PlanService : IPlanService
     {
         //DataConnection 
-        //private readonly IGenericRepository<Plan> _planRepository;
-        //private readonly IGenericRepository<Membership> _membershipRepository;
         private readonly IUnitOfWork _unitOfWork;
 
         public PlanService(IUnitOfWork unitOfWork)
