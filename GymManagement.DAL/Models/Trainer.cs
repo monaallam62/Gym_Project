@@ -10,7 +10,7 @@ namespace GymManagement.DAL.Models
     public class Trainer:GymUser
     {
         //HireDate ==createdAt of BaseEntity
-        public Specialty Specialty { get; set; }
+        public Specialties Specialties { get; set; }
 
         #region Relationships
         public ICollection<Session> Sessions { get; set; }
