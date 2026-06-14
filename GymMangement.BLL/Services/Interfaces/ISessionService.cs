@@ -11,6 +11,8 @@ namespace GymMangement.BLL.Services.Interfaces
     {
         Task<IEnumerable<SessionViewModel>?> GetAllSessionsAsync(CancellationToken ct = default);
         Task<bool> CreateSessionAsync(CreateSessionViewModel model, CancellationToken ct = default);
+        Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct= default);
+        Task<IEnumerable<CategorySelectViewModel>> GetCategoryForDropDownAsync(CancellationToken ct= default);
 
     }
 }

@@ -54,6 +54,8 @@ namespace GymMangement.BLL
         private void MapSession()
         {
             CreateMap<CreateSessionViewModel, Session>();
+            CreateMap<Trainer, TrainerSelectViewModel>();
+            CreateMap<Category, CategorySelectViewModel>();
         }
     }
 }

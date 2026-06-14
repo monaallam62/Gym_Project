@@ -39,6 +39,10 @@ namespace GymMangement.BLL.Services.Classes
             if (!isValid || trainer.Specialties != CategorySpecialty) return false;
             var session = _mapper.Map<CreateSessionViewModel, Session>(model);
 
+            _unitOfWork.GetRepository<Session>().Add(session);
+            var result = await _unitOfWork.SaveChangesAsync();
+            return result > 0;
+
         }
 
         public async Task<IEnumerable<SessionViewModel>?> GetAllSessionsAsync(CancellationToken ct = default)
@@ -64,6 +68,18 @@ namespace GymMangement.BLL.Services.Classes
                 //N + 1 problem
             }
             return mappedSessions;
+        }
+
+        public async Task<IEnumerable<CategorySelectViewModel>> GetCategoryForDropDownAsync(CancellationToken ct = default)
+        {
+            var result =await _unitOfWork.GetRepository<Category>().GetAllAsync(ct: ct);
+            return _mapper.Map<IEnumerable<CategorySelectViewModel>>(result);
+        }
+
+        public async Task<IEnumerable<TrainerSelectViewModel>> GetTrainersForDropDownAsync(CancellationToken ct = default)
+        {
+            var result = await _unitOfWork.GetRepository<Trainer>().GetAllAsync(ct: ct);
+            return _mapper.Map<IEnumerable<TrainerSelectViewModel>>(result);
         }
     }
 }
