@@ -36,12 +36,12 @@ namespace Gym_Project.PL.Controllers
                 return View(model);
             }
             var result = await _sessionService.CreateSessionAsync(model, ct);
-            if(result)
+            if(result.success)
             {
                 TempData["SuccessMessage"] = "Session Created Successfully.";
                 return RedirectToAction(nameof(Index));
             }
-            TempData["ErrorMessage"] = "Session Failed to Create.";
+            TempData["ErrorMessage"] = result.error;
             await PopulateDropDownListAsync();
             return View(model);
         }
