@@ -2,7 +2,7 @@
 
 @{
     ViewData["Title"] = "Sessions";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_Layout";
 }
 
 @if (TempData["SuccessMessage"] != null)
@@ -104,6 +104,7 @@ else if (TempData["ErrorMessage"] != null)
     }
 </div>
 
-@section Scripts {
-    <partial name="_AlertBoxScript.cshtml" />
+@section Scripts
+{
+    <partial name="_AlertScripts" />
 }
