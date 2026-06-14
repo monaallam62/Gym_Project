@@ -2,6 +2,7 @@
 using GymManagement.DAL.Models;
 using GymMangement.BLL.ViewModels;
 using GymMangement.BLL.ViewModels.MemberViewModels;
+using GymMangement.BLL.ViewModels.SessionViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace GymMangement.BLL
     public class MappingProfile :Profile
     {
         public MappingProfile()
+        {
+            MapMember();
+            MapSession();
+        }
+        private void MapMember()
         {
             CreateMap<Member, MemberViewModel>()
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} - {src.Address.Street} - {src.Address.City}"))
@@ -43,7 +49,11 @@ namespace GymMangement.BLL
                     Street = src.Street,
                     City = src.City,
                 }))
-                .ForMember(dest => dest.HealthRecord , opt => opt.MapFrom(src => src.HealthRecordViewModel));
+                .ForMember(dest => dest.HealthRecord, opt => opt.MapFrom(src => src.HealthRecordViewModel));
+        }
+        private void MapSession()
+        {
+            CreateMap<CreateSessionViewModel, Session>();
         }
     }
 }
