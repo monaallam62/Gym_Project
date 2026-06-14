@@ -50,7 +50,7 @@ namespace GymMangement.BLL.Services.Classes
                 };
         }
 
-        public async Task<UpdatePlanViewModel> GetPlanToUpdateAsync(int planId, CancellationToken ct = default)
+        public async Task<UpdatePlanViewModel?> GetPlanToUpdateAsync(int planId, CancellationToken ct = default)
         {
             var plan = await _unitOfWork.GetRepository<Plan>().GetByIdAsync(planId, ct);
             if (plan is null || !plan.IsActive) return null;
