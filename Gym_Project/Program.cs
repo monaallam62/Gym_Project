@@ -1,6 +1,7 @@
 using Gym_Project.Contexts;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
+using GymMangement.BLL;
 using GymMangement.BLL.Services.Classes;
 using GymMangement.BLL.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -18,15 +19,18 @@ namespace Gym_Project
 
             //Register Dependency Injection Container
             //<العقد اللي بين الواجهة وبين الريبو ,immplementation>
+            builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<IMemberService,MemberService>();
+            builder.Services.AddScoped<IPlanService, PlanService>();
             builder.Services.AddScoped<ITrainerService, TrainerService>();
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ISessionService, SessionService>();
+            builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile()));
+
+
             //
-            builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IPlanService, PlanService>();
 
 
             //EFcore create objects from DbContext Automatically when we Request  it from the container(Dependency Injection) and dispose of it after the request is done 
