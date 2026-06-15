@@ -53,5 +53,18 @@ namespace Gym_Project.PL.Controllers
         }
 
         #endregion
+        [HttpGet]
+        public async Task<ActionResult> Details(int id, CancellationToken ct) 
+        {
+            var result = await _sessionService.GetSessionByIdAsync(id, ct);
+            if (result.success)
+                return View(result.value);
+            else
+            {
+                TempData["ErrorMessage"]= result.error;
+                return RedirectToAction(nameof(Index));
+            }
+        }
     }
+
 }
