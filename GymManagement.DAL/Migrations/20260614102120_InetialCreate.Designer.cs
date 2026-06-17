@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymManagement.DAL.Migrations
 {
     [DbContext(typeof(GymDbContext))]
-    [Migration("20260610174301_IntialCreate")]
-    partial class IntialCreate
+    [Migration("20260614102120_InetialCreate")]
+    partial class InetialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -325,7 +325,7 @@ namespace GymManagement.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Specialty")
+                    b.Property<int>("Specialties")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")

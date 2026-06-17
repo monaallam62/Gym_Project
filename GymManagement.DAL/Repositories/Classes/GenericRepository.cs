@@ -21,7 +21,7 @@ namespace GymManagement.DAL.Repositories.Classes
             _dbContext = dbContext;
             _set = _dbContext.Set<TEntity>();
         }
-        public async void AddAsync(TEntity entity)
+        public void Add(TEntity entity)
         {
             _set.Add(entity); //Add Local Not to DB
             
@@ -32,7 +32,7 @@ namespace GymManagement.DAL.Repositories.Classes
             return _set.AsNoTracking().AnyAsync(predicate, ct);
         }
 
-        public async void DeleteAsync(TEntity entity)
+        public void Delete(TEntity entity)
         {
             _set.Remove(entity);
         }
@@ -52,7 +52,7 @@ namespace GymManagement.DAL.Repositories.Classes
         public async Task<TEntity?> GetByIdAsync(int id, CancellationToken ct = default)
         => await _set.FindAsync(id, ct);
 
-        public async void UpdateAsync(TEntity entity)
+        public void Update(TEntity entity)
         {
             _set.Update(entity);
         }
