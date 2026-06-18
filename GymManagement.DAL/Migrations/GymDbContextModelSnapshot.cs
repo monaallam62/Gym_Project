@@ -322,7 +322,7 @@ namespace GymManagement.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("Specialty")
+                    b.Property<int>("Specialties")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
