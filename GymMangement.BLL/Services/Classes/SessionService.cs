@@ -138,6 +138,18 @@ namespace GymMangement.BLL.Services.Classes
             return _mapper.Map<IEnumerable<TrainerSelectViewModel>>(result);
         }
 
-       
+        public async Task<Result> RemoveSessionAsync(int sessionId, CancellationToken ct = default)
+        {
+            var session = await _unitOfWork.SessionRepository.GetByIdAsync(sessionId,ct);
+            if (session == null) return Result.NotFound("Session Not Found");
+            if (session.EndDate >= DateTime.Now)
+                return Result.Fail("Can Not Delte Session That Has Not Ended Yest!");
+            var BookedCount = await _unitOfWork.SessionRepository.GetCountOfBookedSlotAsync(sessionId, ct);
+            if (BookedCount > 0)
+                return Result.Fail("Can Not Delete Session That Has Bookings");
+            _unitOfWork.SessionRepository.Delete(session);
+            var result = await _unitOfWork.SaveChangesAsync(ct);
+            return result > 0 ? Result.Ok() : Result.Fail("Failed To Delete Session.");
+        }
     }
 }
