@@ -65,6 +65,44 @@ namespace Gym_Project.PL.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
+        #region Edit
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id , CancellationToken ct)
+        {
+            var result =await _sessionService.GetSessionToUpdateAsync(id, ct);
+            if(result.success)
+            {
+                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                return View(result.value);
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        #endregion
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id ,UpdateSessionViewModel model ,CancellationToken ct)
+        {
+            if(ModelState.IsValid)
+            {
+                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                return View(model);
+            }
+            var result = await _sessionService.UpdateSessionAsync(id, model, ct);
+            if(result.success)
+            {
+                TempData["SuccessMessage"] = "Session Updated";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["ErrorMessage"] = result.error;
+                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                return View(model);
+            }
+        }
     }
 
 }
