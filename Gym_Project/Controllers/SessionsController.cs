@@ -72,7 +72,8 @@ namespace Gym_Project.PL.Controllers
             var result =await _sessionService.GetSessionToUpdateAsync(id, ct);
             if(result.success)
             {
-                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                //ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                await GetTrainerList();
                 return View(result.value);
             }
             else
@@ -85,9 +86,10 @@ namespace Gym_Project.PL.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, UpdateSessionViewModel model, CancellationToken ct)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                //ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                await GetTrainerList();
                 return View(model);
             }
             var result = await _sessionService.UpdateSessionAsync(id, model, ct);
@@ -99,9 +101,14 @@ namespace Gym_Project.PL.Controllers
             else
             {
                 TempData["ErrorMessage"] = result.error;
-                ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                //ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id", "Name");
+                await GetTrainerList();
                 return View(model);
             }
+        }
+        private async Task GetTrainerList()
+        {
+            ViewBag.Trainers = new SelectList(await _sessionService.GetTrainersForDropDownAsync(), "Id" , "Name");
         }
 
         #endregion

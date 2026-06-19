@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿ using AutoMapper;
 using GymManagement.DAL.Models;
 using GymManagement.DAL.Models.Enums;
 using GymManagement.DAL.Repositories.Interfaces;
@@ -122,12 +122,14 @@ namespace GymMangement.BLL.Services.Classes
 
             var category = await _unitOfWork.GetRepository<Category>().GetByIdAsync(session.CategoryId);
 
-            var isValid = Enum.TryParse<Specialties>(category.CategoryName, true, out var CategorySpecialty);
+            var isValid = Enum.TryParse<Specialties>(category?.CategoryName, true, out var CategorySpecialty);
             if (!isValid || trainer.Specialties != CategorySpecialty) return Result.Validation("Can't Create This Session To This Trainer!");
 
             _mapper.Map(model, session);
             session.UpdatedAt = DateTime.Now;
+
             _unitOfWork.SessionRepository.Update(session);
+
             var result = await _unitOfWork.SaveChangesAsync(ct);
             return result > 0 ? Result.Ok() : Result.Fail("Failed To Update Session!");
         }
