@@ -11,5 +11,7 @@ namespace GymMangement.BLL.Services.Interfaces
         //FileStream   عرض الصورة على الشاشة
         Task<string?> UploadAsync(Stream fileStream , string fileName , string folderName , CancellationToken ct = default);
 
+        bool Delete(string fileName , string folderName);
+        (Stream stream, string contentType)? GetFile(string fileName, string folderName); 
     }
 }

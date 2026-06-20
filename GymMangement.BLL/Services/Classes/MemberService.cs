@@ -53,6 +53,7 @@ namespace GymMangement.BLL.Services.Classes
             else
             {
                 // Delete Photo
+                _attachmentService.Delete(storedPhotoName, "MembersPhoto");
                 return false;
             }
         }
