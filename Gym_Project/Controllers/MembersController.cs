@@ -10,10 +10,12 @@ namespace Gym_Project.PL.Controllers
     {
         //MemberService
         public readonly IMemberService _memService;
+        private readonly IAttachmentService _attachService;
 
-        public MembersController(IMemberService memService)
+        public MembersController(IMemberService memService , IAttachmentService attachService)
         {
             _memService = memService;
+            _attachService = attachService;
         }
 
         #region Get Members
@@ -47,6 +49,17 @@ namespace Gym_Project.PL.Controllers
             return View(record);
         }
 
+        //Action To Get MemberPhoto
+        [HttpGet]
+        public async Task<IActionResult> Picture(int id)
+        {
+            var member = await _memService.GetMemberDetailsByIdAsync(id);
+            if(member is null || string.IsNullOrWhiteSpace(member.Photo))
+                return NotFound();
+            var result = _attachService.GetFile(member.Photo, "MembersPhoto");
+            if(result is null) return NotFound();
+            return File(result.Value.stream, result.Value.contentType);
+        }
         #endregion
         #region Create
         //Get :: BaseUrl/Members/Create =>Show Empty Form
