@@ -1,10 +1,12 @@
 using Gym_Project.Contexts;
 using Gym_Project.PL;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Classes;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL;
 using GymMangement.BLL.Services.Classes;
 using GymMangement.BLL.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
@@ -37,6 +39,18 @@ namespace Gym_Project
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            builder.Services.AddIdentity<ApplicationUser,IdentityRole>(config =>
+            {
+                //config.Password.RequireUppercase = true; //Default
+                //config.Password.RequireLowercase = true; //Default
+
+                config.User.RequireUniqueEmail = true;
+                config.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+                config.Lockout.MaxFailedAccessAttempts = 5;
+            }).AddEntityFrameworkStores<GymDbContext>();
+
+
+
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile())); 
             
 
