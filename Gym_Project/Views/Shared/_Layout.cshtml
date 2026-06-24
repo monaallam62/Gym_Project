@@ -39,13 +39,17 @@
                         <li class="nav-item">
                             <a class="nav-link active px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Members" asp-action="Index">Members</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page"asp-controller="Trainers" asp-action="Index">Trainers</a>
-                        </li>
-                        <li class="nav-item">
+
+                        @if(User.IsInRole("SuperAdmin"))
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Members" asp-action="Index">Members</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Trainers" asp-action="Index">Trainers</a>
+                            </li>
+                            }
+                            <li class="nav-item">
                             <a class="nav-link  px-3 py-2 mx-2 fw-bolder fs-5" aria-current="page" asp-controller="Sessions" asp-action="Index">Sessions</a>
                         </li>
                         <li class="nav-item">
@@ -62,7 +66,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <form href="\Account\Logout" method="post" class="d-inline">
+                            <form asp-controller="Account" asp-action="Login" method="post" class="d-inline">
                                 <button type="submit"
                                         class="btn btn-link nav-link px-3 py-2 mx-2 fw-bolder fs-5 text-black-alternative">
                                     Logout

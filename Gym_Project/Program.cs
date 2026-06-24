@@ -49,7 +49,11 @@ namespace Gym_Project
                 config.Lockout.MaxFailedAccessAttempts = 5;
             }).AddEntityFrameworkStores<GymDbContext>();
 
-
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                //options.LoginPath ="/Account/Login";
+                //options.AccessDeniedPath = "/Account/AccessDenied";
+            });
 
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile())); 
             
@@ -69,6 +73,8 @@ namespace Gym_Project
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

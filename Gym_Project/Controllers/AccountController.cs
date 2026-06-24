@@ -1,6 +1,7 @@
 ﻿using Gym_Project.Controllers;
 using GymManagement.DAL.Models;
 using GymMangement.BLL.ViewModels.AccountViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -60,6 +61,19 @@ namespace Gym_Project.PL.Controllers
                 ModelState.AddModelError("Invalid Login", "Invalid Email or Password");
                 return View(model);
             }
+        }
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
+        }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }
