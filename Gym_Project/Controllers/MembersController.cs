@@ -1,11 +1,14 @@
-﻿using GymMangement.BLL.Services.Interfaces;
+﻿using GymMangement.BLL.Services.Classes;
+using GymMangement.BLL.Services.Interfaces;
 using GymMangement.BLL.ViewModels;
 using GymMangement.BLL.ViewModels.MemberViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace Gym_Project.PL.Controllers
 {
+    [Authorize(Roles = "SuperAdmin")]
     public class MembersController : Controller
     {
         //MemberService
@@ -75,7 +78,7 @@ namespace Gym_Project.PL.Controllers
             if (!ModelState.IsValid) return View(nameof(Create), model);
 
             var result = await _memService.CreateMemberAsync(model, ct);
-            if (result)
+            if (result.success)
                 TempData["SuccessMessage"] = "Member Created Successfully";
             else
                 TempData["ErrorMessage"] = "Member is Already Exist or Failed TO Create!";
@@ -104,8 +107,8 @@ namespace Gym_Project.PL.Controllers
             //Check Model State   
             if (!ModelState.IsValid) return View(model);
 
-            var result = await _memService.UpdateMemberAsync(id, model, ct);
-            if (result)
+            var result = await _memService.UpdateMemberDetailsAsync(id, model, ct);
+            if (result.success)
                 TempData["SuccessMessage"] = "Member Updated Successfully";
             else
                 TempData["ErrorMessage"] = "Failed to Update Member!";
@@ -129,10 +132,8 @@ namespace Gym_Project.PL.Controllers
         public async Task<IActionResult> DeleteConfirmed([FromRoute]int id, CancellationToken ct)
         {
             var result = await _memService.DeleteMemberAsync(id, ct);
-            if (result)
-                TempData["SuccessMessage"] = "Member Deleted Successfully";
-            else
-                TempData["ErrorMessage"] = "Failed to Delete Member! Maybe Member has Active Booking";
+            TempData[result.success ? "SuccessMessage" : "ErrorMessage"] =
+                result.success ? "Member deleted successfully." : result.error;
             return RedirectToAction(nameof(Index));
         }
         #endregion

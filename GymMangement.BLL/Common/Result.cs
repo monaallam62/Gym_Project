@@ -8,7 +8,7 @@ namespace GymMangement.BLL.Common
 {
     public sealed record Result(bool success ,string? error = null ,ResultKind kind = ResultKind.Ok)
     {
-        public static Result Ok() => new Result(true);
+        public static Result Ok() => new (true);
         public static Result Fail(string error, ResultKind kind = ResultKind.Conflict) => new (false , error , kind);
         public static Result NotFound(string error = "Not Found") => new(false, error, ResultKind.NotFound);
         public static Result Validation(string error) => new(false, error, ResultKind.ValidationFailed);
@@ -23,5 +23,15 @@ namespace GymMangement.BLL.Common
 
 
     }
-   
+
+    public enum ResultKind
+    {
+        Ok,
+        NotFound,
+        Conflict,
+        ValidationFailed,
+        Forbidden
+    }
+
+
 }

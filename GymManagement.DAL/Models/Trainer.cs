@@ -13,7 +13,7 @@ namespace GymManagement.DAL.Models
         public Specialties Specialties { get; set; }
 
         #region Relationships
-        public ICollection<Session> Sessions { get; set; }
+        public ICollection<Session> Sessions { get; set; } = default!;
         #endregion
     }
 }

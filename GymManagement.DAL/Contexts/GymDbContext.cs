@@ -1,12 +1,14 @@
 ﻿using Gym_Project.FluentConfiguration;
 using Gym_Project.Models;
 using GymManagement.DAL.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Gym_Project.Contexts
 {
-    public class GymDbContext:DbContext
+    public class GymDbContext:IdentityDbContext<ApplicationUser>
     {
 
         public GymDbContext(DbContextOptions<GymDbContext> options) : base(options)
@@ -15,6 +17,7 @@ namespace Gym_Project.Contexts
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
@@ -26,6 +29,11 @@ namespace Gym_Project.Contexts
         public DbSet<Membership> Memberships { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<HealthRecord> HealthRecords { get; set; }
+        //public DbSet<ApplicationUser> Users { get; set; }
+        //public DbSet<IdentityRole> Roles { get; set; }
+        ////Relation M:M {Users : Roles}
+        //public DbSet<IdentityUserRole<string>> UserRoles { get; set; }
+
 
     }
 }

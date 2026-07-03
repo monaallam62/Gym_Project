@@ -8,19 +8,19 @@ namespace GymManagement.DAL.Models
 {
     public class Session:BaseEntity
     {
-        public string Description { get; set; } 
+        public string Description { get; set; } = default!;
         public int Capacity { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
         #region Relationships
-        public Trainer Trainer { get; set; } //NAV PROP
+        public Trainer Trainer { get; set; } = default!; //NAV PROP 
         public int TrainerId { get; set; } //FK
 
-        public Category Category { get; set; }
+        public Category Category { get; set; } = default!;
         public int CategoryId { get; set; }
 
-        public ICollection<Booking> SessionMember { get; set; }
+        public ICollection<Booking> SessionMember { get; set; } = default!;
 
         #endregion
 

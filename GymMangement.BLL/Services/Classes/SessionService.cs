@@ -49,20 +49,22 @@ namespace GymMangement.BLL.Services.Classes
         public async Task<IEnumerable<SessionViewModel>?> GetAllSessionsAsync(CancellationToken ct = default)
         {
             var sessionRepo = _unitOfWork.SessionRepository;
-            var sessions = await sessionRepo.GetAllSessionswithTrainerAndCategory(ct);
+            var sessions = await sessionRepo.GetAllSessionswithTrainerAndCategory(ct:ct);
             if (sessions == null || !sessions.Any()) return null;
 
-            var mappedSessions = sessions.Select(S => new SessionViewModel()
-            {
-                Id = S.Id,
-                Capacity = S.Capacity,
-                CategoryName = S.Category.CategoryName,
-                TrainerName = S.Trainer.Name,
-                Description = S.Description,
-                EndDate = S.EndDate,
-                StartDate = S.StartDate,
+            //var mappedSessions = sessions.Select(S => new SessionViewModel()
+            //{
+            //    Id = S.Id,
+            //    Capacity = S.Capacity,
+            //    CategoryName = S.Category.CategoryName,
+            //    TrainerName = S.Trainer.Name,
+            //    Description = S.Description,
+            //    EndDate = S.EndDate,
+            //    StartDate = S.StartDate,
 
-            });
+            //});
+            sessions = sessions.OrderByDescending(X => X.StartDate);
+            var mappedSessions = _mapper.Map<IEnumerable<SessionViewModel>>(sessions);
             foreach (var session in mappedSessions)
             {
                 session.AvailableSlots = session.Capacity - await sessionRepo.GetCountOfBookedSlotAsync(session.Id, ct);

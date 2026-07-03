@@ -9,13 +9,13 @@ namespace GymManagement.DAL.Models
     public class Booking:BaseEntity
     {
         #region Relationship
-        public Member Member { get; set; }
+        public Member Member { get; set; } = default!;
         public int MemberId { get; set; }
 
-        public Session Session { get; set; }
+        public Session Session { get; set; } = default!;
         public int SessionId { get; set; }
         //BookingDate == CreatedAt
-        public bool IsAttended { get; set; }
+        public bool IsAttended { get; set; } = false;
 
         #endregion    
     }
