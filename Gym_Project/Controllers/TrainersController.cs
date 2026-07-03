@@ -26,7 +26,7 @@ namespace Gym_Project.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             var result = await _trainerService.CreateTrainerAsync(model, ct);
-            if(result)
+            if(result.success)
             {
                 TempData["SuccessMessage"] = "Trainer Created Successfully.";
                 return RedirectToAction(nameof(Index));
@@ -64,7 +64,7 @@ namespace Gym_Project.PL.Controllers
         {
             if (!ModelState.IsValid) return View(model);
             var result = await _trainerService.UpdateTrainerDetailsAsync (id, model, ct);
-            if (result)
+            if (result.success)
                 TempData["SuccessMessage"] = "Trainer Updated Successfully";
             else
                 TempData["ErrorMessage"] = "Trainer Failes To Update";
@@ -86,11 +86,9 @@ namespace Gym_Project.PL.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id, CancellationToken ct)
         {
             var result = await _trainerService.RemoveTrainerAsync (id, ct);
-            if(result)
-                TempData["SuccessMessage"] = "Trainer Deleted Successfully";
-            else
-                TempData["ErrorMessage"] = "Failed To Delete Trainer";
-            return RedirectToAction (nameof(Index));
+            TempData[result.success ? "SuccessMessage" : "ErrorMessage"] =
+                result.success ? "Trainer deleted successfully." : result.error;
+            return RedirectToAction(nameof(Index));
         }
     }
 }

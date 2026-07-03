@@ -15,7 +15,7 @@ namespace GymManagement.DAL.Models
         public string Phone { get; set; } = default!;
         public DateOnly DateOfBirth { get; set; }
         public Gender Gender { get; set; }
-        public Address Address { get; set; } 
+        public Address Address { get; set; } = default!;
     }
     [Owned]
     public class Address

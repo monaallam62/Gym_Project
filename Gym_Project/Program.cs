@@ -40,6 +40,8 @@ namespace Gym_Project
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
             builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
+            builder.Services.AddScoped<IMembershipService, MembershipService>();
             builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddIdentity<ApplicationUser,IdentityRole>(config =>
             {
@@ -84,7 +86,7 @@ namespace Gym_Project
                 name: "default",
                 pattern: "{controller=Account}/{action=Login}/{id?}");
 
-            await app.RunAsync();
+             app.Run();
         }
     }
 }
