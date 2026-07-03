@@ -13,9 +13,9 @@ namespace GymManagement.DAL.Models
         #region RelationShips
         public HealthRecord HealthRecord { get; set; } = default!; //Navigation Prop
 
-        public ICollection<Membership> MembershipPlans { get; set; }
+        public ICollection<Membership> MembershipPlans { get; set; } = default!;
 
-        public ICollection<Booking> MemberSession { get; set; }
+        public ICollection<Booking> MemberSession { get; set; } = default!;
         #endregion
         //JoinDate ==createedAt of BaseEntity
     }

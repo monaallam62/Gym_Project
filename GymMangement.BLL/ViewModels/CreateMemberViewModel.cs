@@ -13,7 +13,7 @@ namespace GymMangement.BLL.ViewModels
     {
         [Required(ErrorMessage ="Photo Is Required")]
         [Display(Name = "Profile Photo")]
-        public IFormFile PhotoFile { get; set; }
+        public IFormFile PhotoFile { get; set; } = default!;
         [Required(ErrorMessage = "Name Is Required")]
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name can only contain letters and spaces")]
         public string Name { get; set; } = default!;
