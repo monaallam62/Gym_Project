@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Gym_Project.Models;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL.Common;
 using GymMangement.BLL.Services.Interfaces;
@@ -15,10 +17,10 @@ namespace GymMangement.BLL.Services.Classes
     {
         public async Task<Result> CreateMembershipAsync(CreateMemberShipViewModel model, CancellationToken ct = default)
         {
-            var memberExists = await unitOfWork.GetRepository<MemberEntity>().AnyAsync(m => m.Id == model.MemberId, ct);
+            var memberExists = await unitOfWork.GetRepository<Member>().AnyAsync(m => m.Id == model.MemberId, ct);
             if (!memberExists) return Result.NotFound("Member not found.");
 
-            var plan = await unitOfWork.GetRepository<PlanEntity>().GetByIdAsync(model.PlanId, ct);
+            var plan = await unitOfWork.GetRepository<Plan>().GetByIdAsync(model.PlanId, ct);
             if (plan is null) return Result.NotFound("Plan not found.");
             if (!plan.IsActive) return Result.Fail("Plan is not active.");
 
@@ -27,7 +29,7 @@ namespace GymMangement.BLL.Services.Classes
                 .AnyAsync(m => m.MemberId == model.MemberId && m.EndDate > DateTime.Now, ct);
             if (hasActive) return Result.Fail("Member already has an active membership.");
 
-            var entity = new MembershipEntity
+            var entity = new Membership
             {
                 MemberId = model.MemberId,
                 PlanId = plan.Id,
@@ -61,13 +63,13 @@ namespace GymMangement.BLL.Services.Classes
 
         public async Task<IEnumerable<PlanSelectListViewModel>> GetPlansForDropDownAsync(CancellationToken ct = default)
         {
-            var plans = await unitOfWork.GetRepository<PlanEntity>().GetAllAsync(p => p.IsActive, ct: ct);
+            var plans = await unitOfWork.GetRepository<Plan>().GetAllAsync( p => p.IsActive, ct: ct);
             return mapper.Map<IEnumerable<PlanSelectListViewModel>>(plans);
         }
 
         public async Task<IEnumerable<MemberSelectListViewModel>> GetMembersForDropDownAsync(CancellationToken ct = default)
         {
-            var members = await unitOfWork.GetRepository<MemberEntity>().GetAllAsync(ct: ct);
+            var members = await unitOfWork.GetRepository<Member>().GetAllAsync(ct: ct);
             return mapper.Map<IEnumerable<MemberSelectListViewModel>>(members);
         }
     }

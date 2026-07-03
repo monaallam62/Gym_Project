@@ -84,6 +84,7 @@ namespace GymMangement.BLL
         private void MapMember()
         {
             CreateMap<Member, MemberViewModel>()
+                .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.Gender.ToString()))
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => $"{src.Address.BuildingNumber} - {src.Address.Street} - {src.Address.City}"))
                 .ForMember(dest => dest.DateOfBirth, opt => opt.MapFrom(src => src.DateOfBirth.ToShortDateString()));
 
@@ -120,7 +121,8 @@ namespace GymMangement.BLL
             CreateMap<Category, CategorySelectViewModel>();
             CreateMap<Session, SessionViewModel>()
                 .ForMember(dest => dest.TrainerName, opt => opt.MapFrom(src => src.Trainer.Name))
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName));
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.CategoryName))
+                .ForMember(dest => dest.AvailableSlots, opt => opt.Ignore()); // Will Be Calculated After Map
             CreateMap<Session, UpdateSessionViewModel>().ReverseMap();
         }
     }

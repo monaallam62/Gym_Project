@@ -2,7 +2,6 @@
 using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL.Services.Interfaces;
 using GymMangement.BLL.ViewModels.AnalyticsViewModels;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

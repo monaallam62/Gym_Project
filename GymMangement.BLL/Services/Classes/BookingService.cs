@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using GymManagement.DAL.Models;
 using GymManagement.DAL.Repositories.Interfaces;
 using GymMangement.BLL.Common;
 using GymMangement.BLL.Services.Interfaces;
@@ -69,11 +70,11 @@ namespace GymMangement.BLL.Services.Classes
             if (alreadyBooked)
                 return Result.Fail("Member is already booked for this session.");
 
-            var booked = await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(model.SessionId, ct);
+            var booked = await _unitOfWork.SessionRepository.GetCountOfBookedSlotAsync(model.SessionId, ct);
             if (booked >= session.Capacity)
                 return Result.Fail("Session is full.");
 
-            _unitOfWork.BookingRepository.Add(new BookingEntity
+            _unitOfWork.BookingRepository.Add(new Booking
             {
                 MemberId = model.MemberId,
                 SessionId = model.SessionId,
@@ -87,12 +88,12 @@ namespace GymMangement.BLL.Services.Classes
         public async Task<IEnumerable<SessionViewModel>> GetAllSessionsAsync(CancellationToken ct = default)
         {
 
-            var bookings = await _unitOfWork.SessionRepository.GetAllSessionsWithTrainerAndCategoryAsync(x => x.EndDate >= DateTime.Now);
+            var bookings = await _unitOfWork.SessionRepository.GetAllSessionswithTrainerAndCategory(b => b.EndDate >= DateTime.Now);
             if (!bookings.Any()) return null!;
             var MappedSession = _mapper.Map<IEnumerable<SessionViewModel>>(bookings);
             foreach (var item in MappedSession)
             {
-                item.AvailableSlots = item.Capacity - await _unitOfWork.SessionRepository.GetCountOfBookedSlotsAsync(item.Id);
+                item.AvailableSlots = item.Capacity - await _unitOfWork.SessionRepository.GetCountOfBookedSlotAsync(item.Id);
             }
             return MappedSession;
         }
@@ -128,7 +129,7 @@ namespace GymMangement.BLL.Services.Classes
 
             var bookedMemberIds = booking.Select(x => x.MemberId);
 
-            var availableMembers = await _unitOfWork.GetRepository<MemberEntity>()
+            var availableMembers = await _unitOfWork.GetRepository<Member>()
                                               .GetAllAsync(x => !bookedMemberIds.Contains(x.Id));
 
             return _mapper.Map<IEnumerable<MemberSelectListViewModel>>(availableMembers);
