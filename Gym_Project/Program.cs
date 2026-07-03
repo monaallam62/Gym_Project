@@ -39,6 +39,8 @@ namespace Gym_Project
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<ISessionService, SessionService>();
             builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            builder.Services.AddScoped<IMembershipRepository, MembershipRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
             builder.Services.AddIdentity<ApplicationUser,IdentityRole>(config =>
             {
                 //config.Password.RequireUppercase = true; //Default
@@ -51,8 +53,8 @@ namespace Gym_Project
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
-                //options.LoginPath ="/Account/Login";
-                //options.AccessDeniedPath = "/Account/AccessDenied";
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
             });
 
             builder.Services.AddAutoMapper(m => m.AddProfile(new MappingProfile())); 
@@ -82,7 +84,7 @@ namespace Gym_Project
                 name: "default",
                 pattern: "{controller=Account}/{action=Login}/{id?}");
 
-            app.Run();
+            await app.RunAsync();
         }
     }
 }
